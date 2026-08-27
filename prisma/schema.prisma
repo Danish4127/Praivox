@@ -1,0 +1,105 @@
+// Ye file database ka "naqsha" (blueprint) hai.
+// Yahan hum batate hain: kaunsi tables chahiye, aur har table mein
+// kya-kya columns (jaise Excel ke columns) honge.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Ek "Run" = ek dafa ka scheduled attempt (har ghante wala cycle)
+// jismein news fetch karne ki koshish hoti hai.
+model Run {
+  id         String   @id @default(cuid())
+  startedAt  DateTime @default(now())
+  finishedAt DateTime?
+  status     String   // "completed" | "skipped" | "failed"
+  skipReason String?  // sirf tab jab status = "skipped"
+  errorDetail String? // sirf tab jab status = "failed"
+
+  // Phase 5 — Run logging / audit trail. itemsFetched = is run mein
+  // n8n se kitne raw items aaye. sourceErrors = JSON string array,
+  // jaise [{ source: "BBC World", message: "0 items - possible fetch failure" }]
+  // taake har run ke saath ye pata chal sake koi source fail hua tha ya nahi.
+  itemsFetched Int     @default(0)
+  sourceErrors String? // JSON string, null agar koi error nahi thi
+
+  // Diagnostics (added because "0 shortlisted" alone doesn't say WHY —
+  // was it 0 candidates, or candidates that never got a 2nd source?
+  // candidateCount = unique story clusters after dedup, verifiedCount =
+  // how many of those had 2+ sources. shortlistedCount is just
+  // stories.length via the relation below, but we also store it
+  // directly here so Run History doesn't need a second query per run.
+  candidateCount   Int @default(0)
+  verifiedCount    Int @default(0)
+  shortlistedCount Int @default(0)
+
+  stories Story[] // is run mein jo stories mili unka link
+  batch   Batch?  // is run se bana batch (agar bana)
+}
+
+// Ek "Story" = ek news item, merge/dedup/verify ke baad
+model Story {
+  id            String   @id @default(cuid())
+  title         String
+  category      String   // "geopolitical" | "crypto"
+  sourceCount   Int      @default(1) // kitne independent sources ne cover kiya
+  sources       String   // JSON string: [{name, url}, ...]
+  verified      Boolean  @default(false)
+  status        String   @default("shortlisted") // shortlisted | approved | rejected | published
+  publishedAt   DateTime?
+  // Added for the client's 7-day report requirement: rejection previously
+  // had no timestamp at all (only publishedAt existed), so a "rejected in
+  // the last 7 days" report was impossible. Set the moment a story is
+  // rejected (individually or as part of a full-batch reject), mirroring
+  // how publishedAt is set the moment a story is approved.
+  rejectedAt    DateTime?
+  createdAt     DateTime @default(now())
+
+  // Phase 6 — AI-Assisted Enhancements (OPTIONAL). Dono null ho sakte
+  // hain - AI configure na ho, ya AI call fail ho jaye (timeout wagera).
+  // Null hone ka matlab "ye feature is story ke liye available nahi" -
+  // story khud publish/approve/reject sab kaam normal karti hai.
+  aiSummary         String? // ek short, neutral, headline-based caption
+  consistencyScore  String? // "high" | "medium" | "low" - headline-level corroboration confidence
+
+  run   Run    @relation(fields: [runId], references: [id])
+  runId String
+
+  batch   Batch? @relation(fields: [batchId], references: [id])
+  batchId String?
+}
+
+// Ek "Batch" = ek run se milne wali 10 stories ka group,
+// jisko admin ek sath review karta hai
+model Batch {
+  id         String   @id @default(cuid())
+  status     String   @default("pending") // pending | approved | rejected | partially_approved
+  createdAt  DateTime @default(now())
+  reviewedAt DateTime?
+
+  run   Run    @relation(fields: [runId], references: [id])
+  runId String @unique
+
+  stories Story[]
+}
+
+// Settings page — admin ke login credentials ab yahan (database mein)
+// rakhe jate hain, taake password UI se change ho sake (pehle sirf
+// .env.local edit + server restart se hota tha). Sirf EK row hoti hai
+// is table mein kyunki scope mein single-admin-account hi decide hua
+// hai (Section 6, item F).
+//
+// Pehli baar app chalne pe, agar ye table khaali ho, to ADMIN_EMAIL aur
+// ADMIN_PASSWORD_HASH (.env.local se) khud-ba-khud is table mein copy
+// ho jate hain - taake purana setup break na ho.
+model AdminCredential {
+  id           String   @id @default(cuid())
+  email        String
+  passwordHash String // bcrypt hash, seedha (env wale base64-wrap ke bina)
+  updatedAt    DateTime @updatedAt
+}

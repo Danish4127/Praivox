@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring); --font-sans: 'Inter', 'Inter Fallback'; --font-serif: 'DM Serif Display', 'Georgia', serif; --radius-lg: 0.9rem; --radius-md: 0.65rem; --radius-sm: 0.4rem;
+}
+:root { color-scheme: dark; --background: #080c16; --foreground: #f4f5f8; --card: #0e1524; --card-foreground: #f4f5f8; --popover: #0e1524; --popover-foreground: #f4f5f8; --primary: #8b5cf6; --primary-foreground: #fff; --secondary: #111a2c; --secondary-foreground: #f4f5f8; --muted: #111a2c; --muted-foreground: #8791a5; --accent: #17213a; --accent-foreground: #f4f5f8; --destructive: #ef4444; --border: rgba(255,255,255,.1); --input: rgba(255,255,255,.12); --ring: #8b5cf6; }
+* { box-sizing: border-box; }
+html { background: #080c16; scroll-behavior: smooth; }
+body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+.network-ring { position: absolute; left: 54%; top: 47%; border: 1px solid rgba(139,92,246,.14); border-radius: 50%; transform: translate(-50%,-50%) rotate(-18deg); }
+.ring-one { width: 620px; height: 300px; }.ring-two { width: 430px; height: 210px; border-color: rgba(103,232,249,.13); transform: translate(-50%,-50%) rotate(26deg); }
+.node { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #67e8f9; box-shadow: 0 0 16px rgba(103,232,249,.8); }.n1 { left: 68%; top: 27%; }.n2 { left: 78%; top: 55%; background: #a78bfa; }.n3 { left: 49%; top: 67%; }.n4 { left: 87%; top: 34%; background: #a78bfa; }.n5 { left: 61%; top: 20%; }
+.data-line { position: absolute; height: 1px; width: 180px; background: linear-gradient(90deg, transparent, rgba(103,232,249,.45), transparent); transform-origin: left; }.line-one { left: 60%; top: 27%; transform: rotate(32deg); }.line-two { left: 69%; top: 55%; transform: rotate(-38deg); }
+@media (max-width: 640px) { .network-ring { left: 50%; top: 35%; }.ring-one { width: 420px; height: 240px; }.ring-two { width: 320px; height: 180px; } }

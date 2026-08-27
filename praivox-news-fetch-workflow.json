@@ -1,0 +1,665 @@
+{
+  "name": "Praivox - News Fetch (n8n)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "0782719d-090a-4026-8456-92d932645300",
+      "name": "Schedule Trigger (Hourly)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.theguardian.com/world/rss",
+        "options": {}
+      },
+      "id": "71252713-4269-4957-8222-b6b1a5a79859",
+      "name": "RSS - TheGuardian",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -816
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "options": {}
+      },
+      "id": "67b9d742-03dd-4fb7-894f-dfd92a5579bf",
+      "name": "RSS - BBC World",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -624
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "b2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "b3",
+              "name": "sourceName",
+              "value": "BBC World",
+              "type": "string"
+            },
+            {
+              "id": "b4",
+              "name": "category",
+              "value": "geopolitical",
+              "type": "string"
+            },
+            {
+              "id": "b5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4c56b6d1-c165-44cf-8e17-49d873885b1a",
+      "name": "Normalize - BBC World",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -624
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+        "options": {}
+      },
+      "id": "7604c9e1-bfa6-4963-a806-c179f7cc63cc",
+      "name": "RSS - NYT World",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -432
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "c2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "c3",
+              "name": "sourceName",
+              "value": "NYT World",
+              "type": "string"
+            },
+            {
+              "id": "c4",
+              "name": "category",
+              "value": "geopolitical",
+              "type": "string"
+            },
+            {
+              "id": "c5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a174f255-dabc-4abd-b2bb-3650c4d99c59",
+      "name": "Normalize - NYT World",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -432
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+        "options": {}
+      },
+      "id": "921381b7-9ce9-425b-8a43-5cbdf069c29a",
+      "name": "RSS - CoinDesk",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -240
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "d2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "d3",
+              "name": "sourceName",
+              "value": "CoinDesk",
+              "type": "string"
+            },
+            {
+              "id": "d4",
+              "name": "category",
+              "value": "crypto",
+              "type": "string"
+            },
+            {
+              "id": "d5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f3c6859d-39f6-431b-9441-a461dc0320ee",
+      "name": "Normalize - CoinDesk",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://cointelegraph.com/rss",
+        "options": {}
+      },
+      "id": "96f9fe24-ecfe-463e-80a2-138c2df71f31",
+      "name": "RSS - CoinTelegraph",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -48
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "e2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "e3",
+              "name": "sourceName",
+              "value": "CoinTelegraph",
+              "type": "string"
+            },
+            {
+              "id": "e4",
+              "name": "category",
+              "value": "crypto",
+              "type": "string"
+            },
+            {
+              "id": "e5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ddb19ec7-8268-4392-be90-965ac31e0ad7",
+      "name": "Normalize - CoinTelegraph",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://decrypt.co/feed",
+        "options": {}
+      },
+      "id": "a0075122-67e1-46a4-a589-4341c484ef5a",
+      "name": "RSS - Decrypt",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        144
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "f3",
+              "name": "sourceName",
+              "value": "Decrypt",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "category",
+              "value": "crypto",
+              "type": "string"
+            },
+            {
+              "id": "f5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f2f30d24-e6ea-4f66-aca0-920c04bfb99b",
+      "name": "Normalize - Decrypt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "id": "3e3504c3-7004-4d91-9f41-3fdec9083359",
+      "name": "Merge All Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sab items ko ek array mein daal kar, wahi shape banao jo\n// /api/cron/ingest expect karta hai: { items: [...], sourceErrors: [...] }\n//\n// Phase 5 - Source failure detection: har RSS node \"onError: continueRegularOutput\"\n// ke sath set hai, matlab agar koi feed fail ho jaye to us branch ka\n// output khaali aa jata hai (poora workflow crash nahi hota). Yahan hum\n// har source ke naam se uske items count check karte hain - agar 0 hai,\n// us source ke liye ek sourceErrors entry bana dete hain, taake app ki\n// taraf Run History mein ye pata chal sake ke koi source us ghante fail hua tha.\nconst sourceBranches = [\n  { name: 'RSS - TheGuardian', label: 'The Guardian' },\n  { name: 'RSS - BBC World', label: 'BBC World' },\n  { name: 'RSS - NYT World', label: 'NYT World' },\n  { name: 'RSS - CoinDesk', label: 'CoinDesk' },\n  { name: 'RSS - CoinTelegraph', label: 'CoinTelegraph' },\n  { name: 'RSS - Decrypt', label: 'Decrypt' },\n];\n\nconst sourceErrors = [];\nfor (const branch of sourceBranches) {\n  let count = 0;\n  try {\n    count = $items(branch.name).length;\n  } catch (e) {\n    count = 0;\n  }\n  if (count === 0) {\n    sourceErrors.push({\n      source: branch.label,\n      message: '0 items received this run - feed may be down, rate-limited, or timed out.',\n    });\n  }\n}\n\nconst items = $input.all().map((entry) => ({\n  title: entry.json.title,\n  url: entry.json.url,\n  sourceName: entry.json.sourceName,\n  category: entry.json.category,\n  publishedAt: entry.json.publishedAt,\n}));\n\nreturn [{ json: { items, sourceErrors } }];"
+      },
+      "id": "ec805b16-c76b-4518-9ec9-acd0851d9bf9",
+      "name": "Build Ingest Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://praivox-nine.vercel.app/api/cron/ingest",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_CRON_SECRET_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "9ebb01dd-ec0f-45ed-8b1d-250afa814acb",
+      "name": "POST to Praivox Ingest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1312,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "sourceName",
+              "value": "The Guardian",
+              "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "category",
+              "value": "geopolitical",
+              "type": "string"
+            },
+            {
+              "id": "a5",
+              "name": "publishedAt",
+              "value": "={{ $json.isoDate || $json.pubDate || null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fd46cd79-dbb7-4d69-a7f7-8d19fa99d190",
+      "name": "Normalize - TheGuardian",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -816
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger (Hourly)": {
+      "main": [
+        [
+          {
+            "node": "RSS - TheGuardian",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - BBC World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - NYT World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - CoinDesk",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - CoinTelegraph",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Decrypt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS - TheGuardian": {
+      "main": [
+        [
+          {
+            "node": "Normalize - TheGuardian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS - BBC World": {
+      "main": [
+        [
+          {
+            "node": "Normalize - BBC World",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - BBC World": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS - NYT World": {
+      "main": [
+        [
+          {
+            "node": "Normalize - NYT World",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - NYT World": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "RSS - CoinDesk": {
+      "main": [
+        [
+          {
+            "node": "Normalize - CoinDesk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - CoinDesk": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "RSS - CoinTelegraph": {
+      "main": [
+        [
+          {
+            "node": "Normalize - CoinTelegraph",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - CoinTelegraph": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "RSS - Decrypt": {
+      "main": [
+        [
+          {
+            "node": "Normalize - Decrypt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - Decrypt": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Merge All Sources": {
+      "main": [
+        [
+          {
+            "node": "Build Ingest Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Ingest Payload": {
+      "main": [
+        [
+          {
+            "node": "POST to Praivox Ingest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize - TheGuardian": {
+      "main": [
+        [
+          {
+            "node": "Merge All Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fa8324ba-de36-46f4-979b-ae09888073e9",
+  "meta": {
+    "instanceId": "a51fdb3da7fd1e1a5008dce3d2c7760a4f012d8ac5f2a2f511168893da416e6e"
+  },
+  "nodeGroups": [],
+  "id": "RWhGrxQ5PkfPMWgj",
+  "tags": []
+}

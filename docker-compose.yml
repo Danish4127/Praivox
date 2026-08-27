@@ -1,0 +1,37 @@
+# Optional convenience file for self-managed VPS deployment (Docker-based).
+# Not required if you're using a managed Postgres like Neon - in that
+# case just run the "app" service alone with DATABASE_URL pointing at
+# your managed database, and skip the "db" service entirely.
+#
+# Usage: docker compose up -d
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # Only needed if you want to self-host Postgres instead of using a
+  # managed provider (Neon, RDS, Cloud SQL, Azure Database, etc). Per
+  # the Cloud & Server Hosting addendum: any standard Postgres works -
+  # this app has no Neon-specific dependency, just a plain
+  # DATABASE_URL connection string.
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: praivox
+      POSTGRES_PASSWORD: praivox
+      POSTGRES_DB: praivox
+    volumes:
+      - praivox_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  praivox_db_data:
