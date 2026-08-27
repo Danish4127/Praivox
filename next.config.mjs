@@ -6,11 +6,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // "standalone" bundles a minimal, self-contained server (node_modules
-  // trimmed to only what's needed) - this is what makes Docker images
-  // small and lets the app run on ANY host (AWS/Azure/GCP/VPS), not just
-  // Vercel. See Deployment Requirements addendum (Cloud & Server Hosting).
-  output: 'standalone',
+  // "standalone" bundles a minimal, self-contained server for Docker
+  // deployments (AWS/Azure/GCP/VPS) - but it conflicts with Vercel's own
+  // build/output pipeline, so it's only enabled when NOT building on
+  // Vercel. Vercel sets process.env.VERCEL=1 automatically during its
+  // builds, so this switches automatically with no manual config needed.
+  output: process.env.VERCEL ? undefined : 'standalone',
 }
 
 export default nextConfig
