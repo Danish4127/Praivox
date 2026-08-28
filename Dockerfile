@@ -36,6 +36,13 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 
 ENV NODE_ENV=production
 ENV PORT=3000
+# Next.js standalone server binds to "localhost" by default - inside a
+# container, that's only reachable from WITHIN the container itself.
+# Railway (and most cloud platforms) proxy traffic in from OUTSIDE the
+# container, which needs the app listening on 0.0.0.0 (all network
+# interfaces). Without this, you get "Application failed to respond"
+# even though the app is running fine and the port matches.
+ENV HOSTNAME=0.0.0.0
 
 # Next.js "standalone" output already contains a minimal server + the
 # node_modules it actually needs - but Prisma's engine binaries need to

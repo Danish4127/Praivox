@@ -3,6 +3,9 @@ import { ArrowLeft } from 'lucide-react'
 import { EmptyState, NewsList, SiteHeader } from '@/components/praivox'
 import { getPublishedStories } from '@/lib/publicStories'
 
+// Same reason as app/page.tsx - avoid build-time DB calls.
+export const dynamic = 'force-dynamic'
+
 export default async function SearchPage({
   searchParams,
 }: {
