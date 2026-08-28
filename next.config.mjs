@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // Railway / Docker deployment ke liye direct set karein
+  // Agar build Vercel par chal rahi hai toh undefined, warna Railway/Docker ke liye 'standalone'
+  output: process.env.VERCEL ? undefined : 'standalone',
+
   typescript: {
     ignoreBuildErrors: true,
   },
