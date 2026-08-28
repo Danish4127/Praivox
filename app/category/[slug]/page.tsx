@@ -3,6 +3,11 @@ import { ArrowLeft } from 'lucide-react'
 import { EmptyState, NewsList, SiteHeader } from '@/components/praivox'
 import { getPublishedStories } from '@/lib/publicStories'
 
+// Build-time database calls Railway/AWS/Azure Docker builds pe fail
+// hote hain (env vars sirf runtime pe milte hain) - dekho app/page.tsx
+// ka comment. Ye page bhi isliye dynamic hai.
+export const dynamic = 'force-dynamic'
+
 // URL slug ('geopolitics') aur db mein stored category ('geopolitical')
 // ke naam alag hain, isliye ye chhota mapping.
 const CATEGORY_BY_SLUG: Record<string, string> = {

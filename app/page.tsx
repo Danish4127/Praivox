@@ -3,6 +3,17 @@ import { ArrowDown, ArrowRight, ShieldCheck } from 'lucide-react'
 import { CategoryCard, EmptyState, NetworkVisual, NewsList, SiteHeader } from '@/components/praivox'
 import { getPublishedStories } from '@/lib/publicStories'
 
+// Ye page database se live data mangta hai (published stories). Agar
+// Next.js isko "static" samajh kar BUILD TIME pe prerender karne ki
+// koshish kare, to database connection build ke waqt hi chahiye hoga -
+// jo Vercel/Netlify pe kaam kar jata hai (unke build process env vars
+// khud pass kar dete hain) lekin Railway/AWS/Azure ke Docker builds pe
+// FAIL ho jata hai (env vars sirf runtime pe milte hain, build step
+// pe nahi). 'force-dynamic' isko har real visitor request pe render
+// karne pe majboor karta hai - platform-independent fix, aur news site
+// ke liye ویسے bhi behtar hai (hamesha latest data).
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   // Phase 4 — sirf "published" stories yahan aati hain (approve hote hi
   // automatic, koi manual publish step nahi). Home page pe sabse nayi
